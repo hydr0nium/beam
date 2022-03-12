@@ -41,7 +41,7 @@ if [[ $1 == "push" ]]; then
 		echo "File not found. Please provide a valid file path."
 		exit 1
 	fi
-	mv $2 $HOME/.beam/$3.ovpn
+	cp $2 $HOME/.beam/$3.ovpn
 	echo "Successfully added $2 as $3 to beam."
 	exit 0
 fi
