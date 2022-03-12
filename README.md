@@ -1,5 +1,5 @@
 # beam
-Beam is a bash openvpn wrapper which makes it easy to add .ovpn files to a common folder and access it from anywhere in the console.
+Beam is a OpenVPN manager written in bash.
 
 Installation:
 ./beam install
