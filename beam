@@ -1,5 +1,12 @@
 #!/bin/bash
 
+
+DEBUG=0 # Debug Value such that beam is not removed from the git folder
+
+if [[ $DEBUG == 1 ]]; then
+	echo "Running in DEBUG mode"
+fi
+
 if [[ ! -d "$HOME/.beam" ]]; then
 	mkdir $HOME/.beam
 	echo "[!] No $HOME/.beam directory found. Creating it"
@@ -19,15 +26,17 @@ if [[ $1 == "install" ]]; then
 		mkdir -p $HOME/.local/bin/
 	fi
 	cp $0 $HOME/.local/bin/beam
-	rm $0
+	if [[ $DEBUG -ne 1 ]]; then
+		rm $0
+	fi
 	echo "Finished installing the beam"
 	exit 0
 fi
 
 if [[ $1 == "uninstall" ]]; then
-	echo "Are you sure? [Y|n - (n)] (ALL files will be deleted including the ovpn files in ~/.beam:"
-	read sure
-	if [[ $sure == 'Y' ]]; then
+	echo "Are you sure? [Y|n - Default n] (ALL files will be deleted including the ovpn files in ~/.beam:"
+	read input
+	if [[ $input == 'Y' ]]; then
 		echo "Deleting beam"
 		rm $HOME/.beam/*
 		rmdir $HOME/.beam
@@ -46,6 +55,33 @@ if [[ $1 == "push" ]]; then
 	exit 0
 fi
 
+if [[ $1 == "list" ]]; then
+	echo "Possible VPN connections:"
+	echo ""
+	for file in $HOME/.beam/*.ovpn
+	do
+		
+		first=${file//.ovpn}
+		substring=$HOME/.beam/
+		second=${first/#$substring/''}
+		echo "- "$second
+	done
+	exit 0
+fi
+
+if [[ $1 == "remove" ]]; then	
+	if [[ ! -f $HOME/.beam/$2.ovpn ]]; then
+		echo "Name not found please provide a valid name. See 'beam list'"
+		exit 1
+	fi
+	echo "Are you sure you want to remove $2 from beam? [Y|n - Default n ]"
+	read input
+	if [[ $input == 'Y' ]]; then
+		rm $HOME/.beam/$2.ovpn
+		echo "Successfully removed $2 from beam."
+	fi
+	exit 0
+fi
 if [[ ! -f "$HOME/.beam/$1.ovpn" ]]; then
 	echo "File not found. Check if $1.ovpn is in $HOME/.beam/"
 	exit 1
