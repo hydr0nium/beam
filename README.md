@@ -4,6 +4,9 @@ Beam is a bash openvpn wrapper which makes it easy to add .ovpn files to a commo
 Installation:
 ./beam install
 
+See Usage:
+Run beam without arguments
+
 ---
 
 TODO:
