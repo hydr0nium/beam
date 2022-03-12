@@ -1,0 +1,53 @@
+#!/bin/bash
+
+if [[ ! -d "$HOME/.beam" ]]; then
+	mkdir $HOME/.beam
+	echo "[!] No $HOME/.beam directory found. Creating it"
+fi
+
+if [[ $1 == '' ]]; then
+       echo -e "Usage: beam <name> - Connect via OpenVPN\n       beam install - Install the script such that you can use it anywhere\n       beam uninstall - Remove script and all of the OpenVPN files\n       beam push <path_from_file> <name>\nDescription: This tool is a wrapper for OpenVPN. It uses a folder from which it accesses all of the <name>.ovpn files."
+	exit 0
+fi
+
+if [[ $1 == "install" ]]; then
+	if [[ $0 == "$HOME/.local/bin/beam" ]]; then
+		echo "The script is already installed"
+		exit 1
+	fi
+	if [[ ! -d "$HOME/.local/bin/" ]]; then
+		mkdir -p $HOME/.local/bin/
+	fi
+	cp $0 $HOME/.local/bin/beam
+	rm $0
+	echo "Finished installing the beam"
+	exit 0
+fi
+
+if [[ $1 == "uninstall" ]]; then
+	echo "Are you sure? [Y|n - (n)] (ALL files will be deleted including the ovpn files in ~/.beam:"
+	read sure
+	if [[ $sure == 'Y' ]]; then
+		echo "Deleting beam"
+		rm $HOME/.beam/*
+		rmdir $HOME/.beam
+		rm $0
+	fi
+	exit 0
+fi
+
+if [[ $1 == "push" ]]; then
+	if [[ ! -f $2 ]]; then
+		echo "File not found. Please provide a valid file path."
+		exit 1
+	fi
+	mv $2 $HOME/.beam/$3.ovpn
+	echo "Successfully added $2 as $3 to beam."
+	exit 0
+fi
+
+if [[ ! -f "$HOME/.beam/$1.ovpn" ]]; then
+	echo "File not found. Check if $1.ovpn is in $HOME/.beam/"
+	exit 1
+fi
+sudo -k openvpn $HOME/.beam/$1.ovpn
