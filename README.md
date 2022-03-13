@@ -1,7 +1,7 @@
 # beam
 Beam is a in console OpenVPN file manager.
 
-It lets you add files to the beam "vault" which makes it possible to access them from anywhere in the console. It also lets you list all possible connections you can make. Its purpose is to keep all the .ovpn files together and organised for a clean use.
+It lets you add files to the beam storage which makes it possible to access them from anywhere in the console. It also lets you list all possible connections you can make. Its purpose is to keep all the .ovpn files together and organised for a clean use.
 
 ---
 
