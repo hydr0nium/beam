@@ -6,7 +6,6 @@ It lets you add files to the beam storage which makes it possible to access them
 ---
 
 Installation or Update:
-https://github.com/Sol-real/beam
 1. Clone / Pull repo
 2. Run ./beam install
 
