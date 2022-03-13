@@ -22,6 +22,6 @@ Usage:
 
        beam remove <name> - Remove a connection file from beam
        
-       beam list - List all possible connection beam can make
+       beam list - List all possible connections beam can make
 
 ---
