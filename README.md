@@ -18,7 +18,7 @@ Usage:
        
        beam uninstall - Remove script and all of the OpenVPN files
        
-       beam push <path_from_file> <name>
+       beam push <path_from_file> <name> - Add a connection file to beam
 
        beam remove <name> - Remove a connection file from beam
        
