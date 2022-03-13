@@ -6,7 +6,7 @@ It lets you add files to the beam "vault" which makes it possible to access them
 ---
 
 Installation or Update:
-
+https://github.com/Sol-real/beam
 1. Clone / Pull repo
 2. Run ./beam install
 
@@ -18,7 +18,7 @@ Usage:
        
        beam uninstall - Remove script and all of the OpenVPN files
        
-       beam push <path_from_file> <name> - Add a connection file to beam
+       beam push <path_to_ovpn_file> <name> - Add a connection file to beam
 
        beam remove <name> - Remove a connection file from beam
        
