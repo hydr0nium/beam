@@ -2,7 +2,7 @@
 
 
 DEBUG=0 # Debug Value such that beam is not removed from the git folder, current not in use
-
+VERSION=1.1.0
 if [[ $DEBUG == 1 ]]; then
 	echo "Running in DEBUG mode"
 fi
@@ -79,8 +79,32 @@ if [[ $1 == "remove" ]]; then
 	fi
 	exit 0
 fi
+
+if [[ $1 == "version" ]]; then
+	echo -e "
+			  	##
+			  	##	##
+			##     	##	##
+			##     	##	##
+			##	##	##
+		 ██████╗ ███████╗ █████╗ ███╗   ███╗
+	    	 ██╔══██╗██╔════╝██╔══██╗████╗ ████║
+	   ####	 ██████╔╝█████╗  ███████║██╔████╔██║  ####
+	 ######	 ██╔══██╗██╔══╝  ██╔══██║██║╚██╔╝██║  ######
+        ####	 ██████╔╝███████╗██║  ██║██║ ╚═╝ ██║     ####
+ 	 ####    ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝    ####
+	   ####		##	##	##	      ####
+	     ########                           ########
+	      	   ###############################"
+
+	echo "Version: $VERSION"
+	echo "Credit: Sol, Twitter: @hydr0nium_"
+	exit 0
+fi
+
 if [[ ! -f "$HOME/.beam/$1.ovpn" ]]; then
 	echo "File not found. Check if $1.ovpn is in $HOME/.beam/"
 	exit 1
 fi
 sudo -k openvpn $HOME/.beam/$1.ovpn
+
