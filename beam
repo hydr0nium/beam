@@ -13,7 +13,7 @@ if [[ ! -d "$HOME/.beam" ]]; then
 fi
 
 if [[ $1 == '' ]]; then
-       echo -e "Usage: beam <name> - Connect via OpenVPN\n       beam install - Install the script such that you can use it anywhere\n       beam uninstall - Remove script and all of the OpenVPN files\n       beam push <path_to_openvpn_file> <name> - Add a connection file to beam\n       beam remove <name> - Remove a connection file from beam\n       beam list - List all possible connections beam can make\nDescription: Beam is a OpenVPN manager written in bash."
+       echo -e "Usage: beam <name> - Connect via OpenVPN\n       beam install - Install the script such that you can use it anywhere\n       beam uninstall - Remove script and all of the OpenVPN files\n       beam push <path_to_openvpn_file> <name> - Add a connection file to beam\n       beam remove <name> - Remove a connection file from beam\n        beam version - Shows the version and credits of beam\n       beam list - List all possible connections beam can make\nDescription: Beam is a OpenVPN manager written in bash."
 	exit 0
 fi
 
@@ -26,7 +26,7 @@ if [[ $1 == "install" ]]; then
 		mkdir -p $HOME/.local/bin/
 	fi
 	cp $0 $HOME/.local/bin/beam
-	echo "Finished installing the beam"
+	echo "Finished installing beam"
 	exit 0
 fi
 
@@ -98,7 +98,7 @@ if [[ $1 == "version" ]]; then
 	      	   ###############################"
 
 	echo "Version: $VERSION"
-	echo "Credit: Sol, Twitter: @hydr0nium_"
+	echo "Credits: Sol - Twitter: @hydr0nium_"
 	exit 0
 fi
 
