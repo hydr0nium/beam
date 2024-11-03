@@ -11,6 +11,8 @@ import time
 
 home = pathlib.Path.home()
 BEAM_FOLDER = home / pathlib.Path(".beam")
+WIREGUARD_FOLDER = BEAM_FOLDER / pathlib.Path("wireguard")
+OPENVPN_FOLDER = BEAM_FOLDER / pathlib.Path("openvpn")
 LOG_LEVEL = 0
 
 def main():
@@ -22,8 +24,7 @@ def main():
     match (args.command):
         case "connect":
             log("Connecting to VPN", DebugLevel.EVERYTHING)
-            client = arg = "openvpn" if args.openvpn else "wireguard"
-            connect(args.connection, client)
+            connect(args.connection)
         case "version":
             log("Printing version information", DebugLevel.EVERYTHING)
             print(importlib.metadata.version("beam"))
@@ -32,7 +33,8 @@ def main():
             parser.print_help()
         case "add":
             log("Trying to add VPN config", DebugLevel.EVERYTHING)
-            add(args.path, args.name)
+            client = arg = "openvpn" if args.openvpn else "wireguard"
+            add(args.path, args.name, client)
         case "remove":
             log("Trying to remove VPN config", DebugLevel.EVERYTHING)
             remove(args.name)
@@ -47,14 +49,23 @@ def init():
     if not BEAM_FOLDER.is_dir():
         log(".beam folder not found. Creating it", DebugLevel.BASIC)
         BEAM_FOLDER.mkdir()
+    if not WIREGUARD_FOLDER.is_dir():
+        log("wireguard folder not found. Creating it", DebugLevel.BASIC)
+        WIREGUARD_FOLDER.mkdir()
+    if not OPENVPN_FOLDER.is_dir():
+        log("openvpn folder not found. Creating it", DebugLevel.BASIC)
+        OPENVPN_FOLDER.mkdir()
 
         
 
-def add(path, name):
+def add(path, name, client):
     log("Checking if file already exits", DebugLevel.EVERYTHING)
     from_path = pathlib.Path(path)
-    to_path = BEAM_FOLDER / name
-    if to_path.is_file():
+    if client == "openvpn":
+        to_path = OPENVPN_FOLDER / name
+    else:
+        to_path = WIREGUARD_FOLDER / name
+    if (OPENVPN_FOLDER / name).is_file() or (WIREGUARD_FOLDER / name).is_file():
         log("File already exists. Exiting")
         sys.exit()
     log("File will be added to beam", DebugLevel.BASIC)
@@ -65,7 +76,7 @@ def add(path, name):
 
 def remove(name):
     log("Checking if connection name is saved", DebugLevel.BASIC)
-    for file in BEAM_FOLDER.iterdir():
+    for file in BEAM_FOLDER.rglob("*"):
         if file.stem == name:
             log(f"Connection found with name {name}", DebugLevel.EVERYTHING)
             file.unlink()
@@ -77,59 +88,52 @@ def remove(name):
 
 def list_connections():
     log("Going through all connections", DebugLevel.BASIC)
-    print("--- CONNECTIONS ---")
-    for file in BEAM_FOLDER.iterdir():
-        print(f"- {file.stem}")
+    for file in OPENVPN_FOLDER.iterdir():
+        print(f"- {file.stem:<20}|{'OpenVPN':>10}")
+    for file in WIREGUARD_FOLDER.iterdir():
+        print(f"- {file.stem:<20}|{'WireGuard':>10}")
 
 
-def connect(connection, client):
-    match (client):
-        case "openvpn":
-            log("Using connection client OpenVPN", DebugLevel.BASIC)
-            connect_to_openvpn(connection)
-        case "wireguard":
-            log("Using connection client Wireshark", DebugLevel.BASIC)
-            connect_to_wireguard(connection)
-                
-        
-def connect_to_openvpn(connection):
-    log("Checking if connection name is saved", DebugLevel.BASIC)
-    for file in BEAM_FOLDER.iterdir():
+def connect(connection):
+    for file in OPENVPN_FOLDER.iterdir():
         if file.stem == connection:
-            log(f"Connection found with name {connection}", DebugLevel.EVERYTHING)
-            command = ["sudo", "openvpn", str(BEAM_FOLDER / file)]
-            try:
-                log("Connected to VPN Server")
-                log("Press CTRL+C to close VPN connection")
-                run_command(command)
-            except subprocess.CalledProcessError as e:
-                log("Could not connect to VPN Server")
-            except KeyboardInterrupt:
-                log("Disconnecting from VPN connection")
-            sys.exit()
-    log(f"Connection '{connection}' not found")
+            log(f"Connection found with name {connection} for OpenVPN", DebugLevel.EVERYTHING)
+            connect_to_openvpn(file)
+    for file in WIREGUARD_FOLDER.iterdir():
+        if file.stem == connection:
+            log(f"Connection found with name {connection} for WireGuard", DebugLevel.EVERYTHING)
+            connect_to_wireguard(file)
+    log(f"Connection '{name}' not found")
+
+        
+def connect_to_openvpn(file):
+    command = ["sudo", "openvpn", str(OPENVPN_FOLDER / file)]
+    try:
+        log("Connected to VPN Server")
+        log("Press CTRL+C to close VPN connection")
+        run_command(command)
+    except subprocess.CalledProcessError as e:
+        log("Could not connect to VPN Server")
+    except KeyboardInterrupt:
+        log("Disconnecting from VPN connection")
+    sys.exit()
 
 def connect_to_wireguard(connection):
-    log("Checking if connection name is saved", DebugLevel.BASIC)
-    for file in BEAM_FOLDER.iterdir():
-        if file.stem == connection:
-            log(f"Connection found with name {connection}", DebugLevel.EVERYTHING)
-            command = ["sudo", "wg-quick", "up", str(BEAM_FOLDER / file)]
-            try:
-                run_command(command)
-                log("Connected to VPN Server")
-                log("Press CTRL+C to close VPN connection")
-                log("")
-                while True:
-                    time.sleep(1)
-            except subprocess.CalledProcessError as e:
-                log("Could not connect to VPN Server")
-            except KeyboardInterrupt:
-                    log("Disconnecting from VPN connection")
-                    command = ["sudo", "wg-quick", "down", str(BEAM_FOLDER / file)]
-                    subprocess.run(command, check=True, text=True, capture_output=True)
-            sys.exit()
-    log(f"Connection '{connection}' not found")
+    command = ["sudo", "wg-quick", "up", str(WIREGUARD_FOLDER / file)]
+    try:
+        run_command(command)
+        log("Connected to VPN Server")
+        log("Press CTRL+C to close VPN connection")
+        log("")
+        while True:
+            time.sleep(1)
+    except subprocess.CalledProcessError as e:
+        log("Could not connect to VPN Server")
+    except KeyboardInterrupt:
+            log("Disconnecting from VPN connection")
+            command = ["sudo", "wg-quick", "down", str(WIREGUARD_FOLDER / file)]
+            subprocess.run(command, check=True, text=True, capture_output=True)
+    sys.exit()
 
 def run_command(command):
     if LOG_LEVEL >= 1:

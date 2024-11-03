@@ -13,12 +13,12 @@ def parse():
     subparser.add_parser("help", help="Show help")
 
     connectp.add_argument("connection", help="One of the connection names that are shown with list")
-    group1 = connectp.add_mutually_exclusive_group(required=True)
-    group1.add_argument("-wg", "--wireguard", action="store_true", help="Use Wireguard")
-    group1.add_argument("-ovpn", "--openvpn", action="store_true", help="Use OpenVPN")
 
     addp.add_argument("path", help="Path to the file to add")
     addp.add_argument("name", help="Custom name for connection")
+    group2 = addp.add_mutually_exclusive_group(required=True)
+    group2.add_argument("-wg", "--wireguard", action="store_true", help="Use Wireguard")
+    group2.add_argument("-ovpn", "--openvpn", action="store_true", help="Use OpenVPN")
 
     removep.add_argument("name", help="Custom name of connection")
 
