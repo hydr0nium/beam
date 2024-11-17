@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beam"
-version = "2.1.0"
+version = "2.1.1"
 description = ""
 authors = ["hydr0nium <37932436+hydr0nium@users.noreply.github.com>"]
 readme = "README.md"

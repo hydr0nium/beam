@@ -64,6 +64,7 @@ def add(path, name, client):
     if client == "openvpn":
         to_path = OPENVPN_FOLDER / name
     else:
+        name = name + ".conf"
         to_path = WIREGUARD_FOLDER / name
     if (OPENVPN_FOLDER / name).is_file() or (WIREGUARD_FOLDER / name).is_file():
         log("File already exists. Exiting")
@@ -118,13 +119,12 @@ def connect_to_openvpn(file):
         log("Disconnecting from VPN connection")
     sys.exit()
 
-def connect_to_wireguard(connection):
+def connect_to_wireguard(file):
     command = ["sudo", "wg-quick", "up", str(WIREGUARD_FOLDER / file)]
     try:
         run_command(command)
         log("Connected to VPN Server")
         log("Press CTRL+C to close VPN connection")
-        log("")
         while True:
             time.sleep(1)
     except subprocess.CalledProcessError as e:
