@@ -2,7 +2,7 @@
 
 # <img src="https://user-images.githubusercontent.com/37932436/160900239-9d1b73ad-3840-43e6-83e9-905a5d43c4ed.png" width=50px height=50px\> beam
 
-Beam is a in console VPN file manager. It works with OpenVPN as well as with Wireguard. (Wireguard currently untested)
+Beam is a in console VPN file manager. It works with OpenVPN as well as with Wireguard.
 
 ---
 
