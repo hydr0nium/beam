@@ -8,6 +8,7 @@ import shutil
 import os
 import subprocess
 import time
+from sys import platform
 
 home = pathlib.Path.home()
 BEAM_FOLDER = home / pathlib.Path(".beam")
@@ -108,7 +109,12 @@ def connect(connection):
 
         
 def connect_to_openvpn(file):
-    command = ["sudo", "openvpn", str(OPENVPN_FOLDER / file)]
+    if platform == "linux" or platform == "linux2": 
+        command = ["sudo", "openvpn", str(OPENVPN_FOLDER / file)]
+    elif platform == "win32":
+        command = ["openvpn", str(OPENVPN_FOLDER / file)]
+    else:
+        log("Operating System not recognized")
     try:
         log("Connected to VPN Server")
         log("Press CTRL+C to close VPN connection")
@@ -120,7 +126,13 @@ def connect_to_openvpn(file):
     sys.exit()
 
 def connect_to_wireguard(file):
-    command = ["sudo", "wg-quick", "up", str(WIREGUARD_FOLDER / file)]
+    
+    if platform == "linux" or platform == "linux2": 
+        command = ["sudo", "wg-quick", "up", str(WIREGUARD_FOLDER / file)]
+    elif platform == "win32":
+        command = ["openvpn", str(OPENVPN_FOLDER / file)]
+    else:
+        log("Operating System not recognized")
     try:
         run_command(command)
         log("Connected to VPN Server")
