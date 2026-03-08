@@ -19,14 +19,15 @@ usage: beam [-h] [-v] {connect,add,remove,list,version,help} ...
 
 positional arguments:
   {connect,add,remove,list,version,help}
-    connect             Connect to a specified connection
-    add                 Add a connection to beam
-    remove              Remove a connection from beam
-    list                Show all availabe connections
+    connect             Connect to a VPN
+    add                 Add a connection
+    remove              Remove a connection
+    list                Show all available connections
     version             Show the current version of beam
     help                Show help
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose
+
 ```
