@@ -6,7 +6,7 @@ def parse():
 
     subparser = parser.add_subparsers(dest="command", required=True)
     connectp = subparser.add_parser("connect", help="Connect to a VPN")
-    addp = subparser.add_parser("add", help=" a connection")
+    addp = subparser.add_parser("add", help="Add a connection")
     removep = subparser.add_parser("remove", help="Remove a connection")
     subparser.add_parser("list", help="Show all availabe connections")
     subparser.add_parser("version", help="Show the current version of beam")
