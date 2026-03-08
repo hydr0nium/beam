@@ -72,6 +72,7 @@ def add(path, name, client):
         sys.exit()
     log("File will be added to beam", DebugLevel.BASIC)
     shutil.copy(from_path, to_path)
+    os.chmod(to_path, 0o440)
     log(f"Successfully added {from_path.name} to beam")
     
 
